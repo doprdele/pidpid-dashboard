@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- Specify the AngularJS app to use -->
+<html lang="en" ng-app="pidpid-dashboard">
+
+<head>
+    <meta charset="utf-8">
+    <title>PidPid Dashboard</title>
+    <link rel="stylesheet" href="css/app.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default">
+        PidPid Dashboard
+    </nav>
+
+    <div class="container">
+        <div class="alert alert-info" role="alert">Information displayed below updated every 30 minutes</div>
+    </div>
+
+    <div ng-controller="DashboardController">
+        <table class="table table-striped">
+            <caption>
+                <span class="label label-default">Running spiders</span>
+            </caption>
+            <thead>
+                <tr>
+                    <th>Spider</th>
+                    <th>Items found</th>
+                    <th>Started at</th>
+                    <th>Most recent activity</th>
+                    <th>Runtime</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="job in runningJobs">
+                    <td>{{job.spider}}</td>
+                    <td><span class="badge">{{job.items_scraped}}</span></td>
+                    <td>{{job.started_time | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                    <td>{{job.updated_time | amUtc | amLocal | amDateFormat:'YYYY-MM-DD HH:mm:ss'}}</td>
+                    <td>{{job.updated_time | amDifference : job.started_time : 'minutes' }} minutes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped">
+            <caption>
+                <span class="label label-default">Spider schedule</span>
+            </caption>
+            <thead>
+                <tr>
+                    <th>Spider</th>
+                    <th>Will run at</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="job in periodicJobs">
+                    <td>{{job.spider}}</td>
+                    <td>{{formatScheduleString(job)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
